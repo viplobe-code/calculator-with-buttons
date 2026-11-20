@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+  <title>Calculator</title>
+  <!-- FOR FURTHER RESEARCH: the CSS below is only for looks. The calculator works without it. -->
+  <style>
+    body   { font-family: Arial, sans-serif; max-width: 340px; margin: 40px auto; background: #fff; color: #222; }
+    h1     { text-align: center; }
+    .calc  { background: #1f2933; padding: 16px; border-radius: 14px; }
+    .equation { color: #9aa5b1; min-height: 22px; text-align: right; font-size: 16px; }
+    .screen   { color: #fff; font-size: 32px; text-align: right; padding: 10px 4px; min-height: 40px;
+                overflow-wrap: anywhere; }
+    .keys  { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+    button { font-size: 22px; padding: 16px 0; border: none; border-radius: 10px; cursor: pointer;
+             background: #e4e7eb; color: #1f2933; }
+    .op    { background: #0F8B8D; color: #fff; }
+    .clear { background: #cbd2d9; }
+    .equals { background: #1F3A63; color: #fff; grid-row: span 2; }
+    .zero  { grid-column: span 2; }
+    .error { color: #b00020; font-size: 16px; margin-top: 12px; text-align: center; }
+    .history { color: #444; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <h1>Calculator</h1>
+
+  <!-- One form for the whole keypad. Every button sends the form to Python. -->
+  <form method="POST">
+
+    <!-- These two hidden boxes carry the screen text and the "answer just shown" flag to Python. -->
+    <input type="hidden" name="expression" value="{{ expression }}">
+    <input type="hidden" name="done" value="{{ 1 if done else 0 }}">
+
+    <div class="calc">
+      <div class="equation">{{ equation }}</div>
+      <div class="screen">{{ expression if expression else "0" }}</div>
+
+      <!-- Each button has name="key". Its "value" tells Python which button was pressed. -->
+      <div class="keys">
+        <button name="key" value="C" class="clear">C</button>
+        <button name="key" value="⌫" class="clear">⌫</button>
+        <button name="key" value="÷" class="op">÷</button>
+        <button name="key" value="×" class="op">×</button>
+
+        <button name="key" value="7">7</button>
+        <button name="key" value="8">8</button>
+        <button name="key" value="9">9</button>
+        <button name="key" value="-" class="op">−</button>
+
+        <button name="key" value="4">4</button>
+        <button name="key" value="5">5</button>
+        <button name="key" value="6">6</button>
+        <button name="key" value="+" class="op">+</button>
+
+        <button name="key" value="1">1</button>
+        <button name="key" value="2">2</button>
+        <button name="key" value="3">3</button>
+        <button name="key" value="=" class="equals">=</button>
+
+        <button name="key" value="0" class="zero">0</button>
+        <button name="key" value=".">.</button>
+      </div>
+    </div>
+  </form>
+
+  {% if error %}
+    <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <div class="history">
+    <h3>Recent calculations</h3>
+    <ul>
+      {% for line in history %}
+        <li>{{ line }}</li>
+      {% else %}
+        <li>Nothing yet</li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>
